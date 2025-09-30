@@ -65,3 +65,9 @@ The original source code and documentation are stored in a **private repository*
 - **Team members** – Development and testing collaboration  
 
 ---
+## ⚠️ Disclaimer
+This repository is a **public showcase only**.  
+The original source code is hosted in a **private repository** owned by the [RUB-SELAB-2025](https://github.com/RUB-SELAB-2025) organization.  
+
+While the project was developed under the **MIT License**, redistribution of the full code is restricted to preserve academic integrity.  
+This showcase is intended solely to present the project concept, features, and my personal contributions.
