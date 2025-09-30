@@ -4,5 +4,3 @@
 # Don't count markdown files in language stats
 *.md linguist-documentation
 
-.showcase-languages/* linguist-detectable
-*.md linguist-documentation
