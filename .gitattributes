@@ -1,6 +1,0 @@
-# Count filler files in language stats
-.showcase-languages/* linguist-detectable
-
-# Don't count markdown files in language stats
-*.md linguist-documentation
-
