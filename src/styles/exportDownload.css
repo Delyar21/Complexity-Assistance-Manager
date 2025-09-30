@@ -1,0 +1,74 @@
+.export-dropdown {
+    position: fixed;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.15),
+        0 8px 20px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    z-index: 10000;
+    min-width: 200px;
+    overflow: hidden;
+    animation: dropdownSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.export-dropdown button {
+    width: 100%;
+    padding: 16px 20px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2c3e50;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.export-dropdown button::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: #e74c3c;
+    transition: width 0.3s ease;
+    z-index: -1;
+}
+
+.export-dropdown button:hover {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.export-dropdown button:hover::before {
+    width: 100%;
+}
+
+.export-dropdown button:first-child::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 1px;
+    background: #e1e8ed;
+}

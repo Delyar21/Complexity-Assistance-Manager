@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Komplexitäts-Manager - CarByte</title>
+  <style>
+    :root {
+      --gradient: linear-gradient(90deg, #e94e3c, #c25162, #003b6f);
+      --accent-color: #00a9e0;
+      --text-color: #333;
+      --bg-color: #f4f7fa;
+      --white: #fff;
+      --dark-blue: #003b6f;
+      --card-bg: #ffffff;
+      --nav-hover: rgba(255, 255, 255, 0.1);
+      --footer-bg: #003b6f;
+      --footer-text: #ccc;
+      --header-bg: #003b6f;
+      --header-text: #fff;
+      --hero-bg: linear-gradient(90deg, #e94e3c, #c25162, #003b6f);
+      --hero-text: #fff;
+    }
+    :root[data-theme="dark"] {
+      --text-color: #e8eaed;
+      --bg-color: #202124;
+      --card-bg: #303134;
+      --nav-hover: rgba(255, 255, 255, 0.15);
+      --footer-bg: #1a1a1a;
+      --footer-text: #9aa0a6;
+      --header-bg: #303134;
+      --header-text: #e8eaed;
+      --hero-bg: linear-gradient(135deg, #4a5568 0%, #2d3748 50%, #1a202c 100%);
+      --hero-text: #f7fafc;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    header {
+      background-color: var(--header-bg);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--header-text);
+      flex-wrap: wrap;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .logo img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    nav a {
+      color: var(--header-text);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: var(--nav-hover);
+    }
+    .lang-switch,
+    .theme-toggle {
+      background-color: transparent;
+      border: 1px solid var(--header-text);
+      color: var(--header-text);
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+    }
+    .lang-switch:hover,
+    .theme-toggle:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+    .hero {
+      background: var(--hero-bg);
+      color: var(--hero-text);
+      padding: 80px 40px;
+      text-align: center;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .section {
+      padding: 60px 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .model-box,
+    .projects-box,
+    .features-box {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+    .model-box h2,
+    .projects-box h2,
+    .features-box h2 {
+      color: var(--dark-blue);
+      margin-bottom: 20px;
+    }
+    .model-box p,
+    .projects-box p,
+    .features-box p {
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+    .model-box button {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .project-card {
+      background: #f9f9f9;
+      border-left: 4px solid var(--accent-color);
+      padding: 12px 20px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s ease;
+    }
+    .project-card:hover {
+      background: #f0f0f0;
+    }
+    .folder-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .project-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .project-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .project-name {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+    .project-date {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    .project-actions {
+      position: relative;
+      cursor: pointer;
+    }
+    .action-menu {
+      position: absolute;
+      top: 25px;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 10;
+      display: none;
+      min-width: 120px;
+      font-size: 0.9rem;
+    }
+    .action-menu button {
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .action-menu button:hover {
+      background: #f0f0f0;
+    }
+    /* Kernfunktionen hover styles */
+    .feature {
+      position: relative;
+      display: inline-block;
+      margin: 15px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .feature-title {
+      font-weight: bold;
+      color: var(--dark-blue);
+    }
+    .feature-tooltip {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      text-align: center;
+      border-radius: 4px;
+      padding: 8px 12px;
+      position: absolute;
+      z-index: 1;
+      top: 125%; /* Appears below */
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-size: 0.85rem;
+    }
+    .feature:hover .feature-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    footer {
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
+      text-align: center;
+      padding: 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: var(--card-bg);
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      position: relative;
+      color: var(--text-color);
+    }
+    .modal-close {
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--accent-color);
+    }
+    #projectNameInput {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    #confirm-btn {
+      background-color: var(--accent-color);
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #confirm-btn:hover {
+      background-color: #0094cc;
+    }
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header aria-label="Site Navigation">
+  <div class="logo">
+    <img src="https://framerusercontent.com/images/ad7rAjTN6oLCignyntgSjueisI.png  " alt="CarByte Logo" decoding="async" />
+  </div>
+  <nav>
+    <a href="#create-section" id="nav-create-model">Modell erstellen</a>
+    <a href="#projects-section" id="nav-projects">Projekte</a>
+    <a href="#features-section" id="nav-features">Funktionen</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-button" aria-label="Toggle dark mode">
+      <svg class="sun-icon" viewBox="0 0 24 24">
+        <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.591 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" style="display: none">
+        <path d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" />
+      </svg>
+    </button>
+    <button class="lang-switch" onclick="toggleLang()" id="lang-button" aria-label="Switch Language">Eng</button>
+  </nav>
+</header>
+<!-- Hero Section -->
+<section class="hero" aria-labelledby="hero-heading">
+  <h1 id="hero-title">Komplexitäts-Manager</h1>
+  <p id="hero-text">
+    Ihr digitales Werkzeug zur Visualisierung und Optimierung komplexer Geschäftsprozesse – powered by CarByte.
+  </p>
+</section>
+<!-- Create Model Section -->
+<section class="section" id="create-section">
+  <div class="model-box">
+    <h2 id="create-title">Erstellen Sie Ihr eigenes Modell</h2>
+    <p id="create-text">
+      Definieren Sie Objekte wie Systeme, Dokumente oder Ressourcen und stellen Sie Abhängigkeiten dar – intuitiv mit Drag-and-Drop.
+    </p>
+    <button onclick="openModal()" id="start-modeling-btn">Modellerstellung starten</button>
+  </div>
+</section>
+<!-- Your Projects Section -->
+<section class="section projects-section" id="projects-section" aria-labelledby="projects-heading">
+  <div class="projects-box">
+    <h2 id="projects-title">Ihre Projekte</h2>
+    <div class="project-list" id="project-list"></div>
+  </div>
+</section>
+<!-- Key Features / Kernfunktionen Section -->
+<section class="section features-box" id="features-section" aria-labelledby="features-heading">
+  <h2 id="features-title">Kernfunktionen</h2>
+  <div class="feature">
+    <h3 class="feature-title" id="feature-modeling-title">Grafische Modellierung</h3>
+    <div class="feature-tooltip">
+      <span class="feature-description">Erstellen Sie Prozessmodelle mit Drag-and-Drop-Oberfläche.</span>
+    </div>
+  </div>
+  <div class="feature">
+    <h3 class="feature-title" id="feature-ai-title">KI-Analyse</h3>
+    <div class="feature-tooltip">
+      <span class="feature-description">Erhalten Sie automatisierte Optimierungsvorschläge basierend auf Ihren Daten.</span>
+    </div>
+  </div>
+  <div class="feature">
+    <h3 class="feature-title" id="feature-export-title">Datenexport</h3>
+    <div class="feature-tooltip">
+      <span class="feature-description">Speichern und exportieren Sie Modelle im JSON-Format.</span>
+    </div>
+  </div>
+  <div class="feature">
+    <h3 class="feature-title" id="feature-versioning-title">Versionierung</h3>
+    <div class="feature-tooltip">
+      <span class="feature-description">Verfolgen Sie Änderungen über verschiedene Projektphasen hinweg.</span>
+    </div>
+  </div>
+</section>
+<!-- Footer -->
+<footer aria-label="Footer Information">
+  <p id="footer-text">2025 CarByte GmbH – Alle Rechte vorbehalten.</p>
+</footer>
+<!-- Modal Dialog -->
+<div id="projectModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <h2 id="modal-title">Projekt erstellen</h2>
+    <input type="text" id="projectNameInput" placeholder="Projektname eingeben..." />
+    <button id="confirm-btn" onclick="confirmProjectName()">Erstellen</button>
+  </div>
+</div>
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const newTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    const sunIcon = document.querySelector(".sun-icon");
+    const moonIcon = document.querySelector(".moon-icon");
+    if (newTheme === "dark") {
+      sunIcon.style.display = "none";
+      moonIcon.style.display = "block";
+    } else {
+      sunIcon.style.display = "block";
+      moonIcon.style.display = "none";
+    }
+  }
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    const root = document.documentElement;
+    root.setAttribute("data-theme", savedTheme);
+    const sunIcon = document.querySelector(".sun-icon");
+    const moonIcon = document.querySelector(".moon-icon");
+    if (savedTheme === "dark") {
+      sunIcon.style.display = "none";
+      moonIcon.style.display = "block";
+    } else {
+      sunIcon.style.display = "block";
+      moonIcon.style.display = "none";
+    }
+  }
+  const texts = {
+    de: {
+      "nav-create-model": "Modell erstellen",
+      "nav-projects": "Projekte",
+      "nav-features": "Funktionen",
+      "lang-button": "Eng",
+      "hero-title": "Komplexitäts-Manager",
+      "hero-text": "Ihr digitales Werkzeug zur Visualisierung und Optimierung komplexer Geschäftsprozesse – powered by CarByte.",
+      "create-title": "Erstellen Sie Ihr eigenes Modell",
+      "create-text": "Definieren Sie Objekte wie Systeme, Dokumente oder Ressourcen und stellen Sie Abhängigkeiten dar – intuitiv mit Drag-and-Drop.",
+      "start-modeling-btn-text": "Modellerstellung starten",
+      "start-modeling": "Modellerstellung gestartet!",
+      "features-title": "Kernfunktionen",
+      "feature-modeling-title": "Grafische Modellierung",
+      "feature-modeling-desc": "Erstellen Sie Prozessmodelle.",
+      "feature-ai-title": "KI-Analyse",
+      "feature-ai-desc": "Erhalten Sie automatisierte Optimierungsvorschläge basierend auf Ihren Daten.",
+      "feature-export-title": "Datenexport",
+      "feature-export-desc": "Speichern und exportieren Sie Modelle im JSON-Format.",
+      "feature-versioning-title": "Skalierbarkeit",
+      "feature-versioning-desc": "Verfolgen Sie Änderungen über verschiedene Projektphasen hinweg.",
+      "footer-text": "2025 CarByte GmbH – Alle Rechte vorbehalten.",
+      "projects-title": "Ihre Projekte",
+      "rename": "Umbenennen",
+      "duplicate": "Duplizieren",
+      "delete": "Löschen",
+      "cancel": "Abbrechen",
+      "modal-title": "Projekt erstellen"
+    },
+    en: {
+      "nav-create-model": "Create Model",
+      "nav-projects": "Projects",
+      "nav-features": "Features",
+      "lang-button": "Deu",
+      "hero-title": "Complexity Assistance Manager",
+      "hero-text": "Your digital tool for visualizing and optimizing complex business processes – powered by CarByte.",
+      "create-title": "Create Your Own Model",
+      "create-text": "Define objects such as systems, documents, or resources and represent dependencies.",
+      "start-modeling-btn-text": "Start Modeling",
+      "start-modeling": "Modeling started!",
+      "features-title": "Key Features",
+      "feature-modeling-title": "Graphical Modeling",
+      "feature-modeling-desc": "Create process models with a drag-and-drop interface.",
+      "feature-ai-title": "AI Analysis",
+      "feature-ai-desc": "Receive automated optimization suggestions based on your data.",
+      "feature-export-title": "Data Export",
+      "feature-export-desc": "Save and export models in JSON format.",
+      "feature-versioning-title": "Scabality",
+      "feature-versioning-desc": "Track changes across different project phases.",
+      "footer-text": "2025 CarByte GmbH – All rights reserved.",
+      "projects-title": "Your Projects",
+      "rename": "Rename",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "modal-title": "Create Project"
+    }
+  };
+  function toggleLang() {
+    const currentLang = document.documentElement.getAttribute("lang");
+    const newLang = currentLang === "de" ? "en" : "de";
+    document.documentElement.setAttribute("lang", newLang);
+    Object.keys(texts[newLang]).forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = texts[newLang][id];
+    });
+    const modalTitle = document.getElementById("modal-title");
+    if (modalTitle) modalTitle.textContent = texts[newLang]["modal-title"];
+    loadProjects();
+  }
+  function openModal() {
+    const modal = document.getElementById("projectModal");
+    const modalTitle = document.getElementById("modal-title");
+    const currentLang = document.documentElement.getAttribute("lang");
+    modalTitle.textContent = texts[currentLang]["modal-title"];
+    modal.style.display = "block";
+  }
+  function closeModal() {
+    const modal = document.getElementById("projectModal");
+    modal.style.display = "none";
+  }
+  function confirmProjectName() {
+    const input = document.getElementById("projectNameInput");
+    const projectName = input.value.trim();
+    if (!projectName) return;
+    const date = new Date().toLocaleDateString();
+    const project = { name: projectName, date: date };
+    let projects = JSON.parse(localStorage.getItem("userProjects")) || [];
+    projects.push(project);
+    localStorage.setItem("userProjects", JSON.stringify(projects));
+    input.value = "";
+    closeModal();
+    window.location.href = "editor.html";
+  }
+  function handleAction(action, index) {
+    const projects = JSON.parse(localStorage.getItem("userProjects")) || [];
+    if (index >= projects.length) return;
+    switch (action) {
+      case "rename":
+        const newName = prompt("Neuer Projektname:", projects[index].name);
+        if (newName && newName.trim()) {
+          projects[index].name = newName.trim();
+          localStorage.setItem("userProjects", JSON.stringify(projects));
+          loadProjects();
+        }
+        break;
+      case "duplicate":
+        const duplicated = { ...projects[index], name: projects[index].name + " (Kopie)" };
+        projects.push(duplicated);
+        localStorage.setItem("userProjects", JSON.stringify(projects));
+        loadProjects();
+        break;
+      case "delete":
+        if (confirm("Projekt wirklich löschen?")) {
+          projects.splice(index, 1);
+          localStorage.setItem("userProjects", JSON.stringify(projects));
+          loadProjects();
+        }
+        break;
+    }
+    const menus = document.querySelectorAll(".action-menu");
+    menus.forEach(menu => menu.style.display = "none");
+  }
+  function loadProjects() {
+    const projectList = document.getElementById("project-list");
+    projectList.innerHTML = "";
+    const currentLang = document.documentElement.getAttribute("lang");
+    let projects = JSON.parse(localStorage.getItem("userProjects")) || [
+      { name: "Projekt A", date: "10.07.2025" },
+      { name: "Projekt B", date: "05.07.2025" },
+      { name: "Modell X", date: "12.07.2025" },
+      { name: "Analyse Y", date: "08.07.2025" }
+    ];
+    projects.forEach((project, index) => {
+      const card = document.createElement("div");
+      card.className = "project-card";
+      const actionMenu = `
+        <div class="project-actions">
+          <span>⋯</span>
+          <div class="action-menu">
+            <button onclick="handleAction('rename', ${index})">${texts[currentLang].rename}</button>
+            <button onclick="handleAction('duplicate', ${index})">${texts[currentLang].duplicate}</button>
+            <button onclick="handleAction('delete', ${index})">${texts[currentLang].delete}</button>
+            <button onclick="handleAction('cancel')">${texts[currentLang].cancel}</button>
+          </div>
+        </div>
+      `;
+      card.innerHTML = `
+        <div class="project-info">
+          <svg class="folder-icon" viewBox="0 0 24 24">
+            <path d="M20 6H12l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" fill="currentColor"/>
+          </svg>
+          <div class="project-meta">
+            <span class="project-name">${project.name}</span>
+            <span class="project-date">${currentLang === 'de' ? 'Letzte Änderung' : 'Last Change'} ${project.date}</span>
+          </div>
+        </div>
+        ${actionMenu}
+      `;
+      const actions = card.querySelector(".project-actions");
+      actions.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const menu = card.querySelector(".action-menu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      });
+      document.addEventListener("click", () => {
+        const menus = document.querySelectorAll(".action-menu");
+        menus.forEach(menu => menu.style.display = "none");
+      });
+      projectList.appendChild(card);
+    });
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeTheme();
+    toggleLang();
+    if (!localStorage.getItem("userProjects")) {
+      const sampleProjects = [
+        { name: "Projekt A", date: "10.07.2025" },
+        { name: "Projekt B", date: "05.07.2025" },
+        { name: "Modell X", date: "12.07.2025" },
+        { name: "Analyse Y", date: "08.07.2025" }
+      ];
+      localStorage.setItem("userProjects", JSON.stringify(sampleProjects));
+    }
+    loadProjects();
+  });
+</script>
+</body>
+</html> 

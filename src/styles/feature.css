@@ -1,0 +1,64 @@
+/* Toolbar-Separator */
+.toolbar-separator {
+    width: 40px;
+    height: 2px;
+    background: #2c3e50;
+    margin: 5px 0;
+    border-radius: 1px;
+}
+
+/* Undo/Redo Button Styles */
+.undo-redo-btn {
+    background: #7f8c8d !important;
+}
+
+.undo-redo-btn:hover:not(:disabled) {
+    background: #6c7b7d !important;
+}
+
+.undo-redo-btn:disabled {
+    background: #bdc3c7 !important;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+
+#paint-shapes-panel {
+  display: none;
+  position: absolute;
+  z-index: 1000;
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+
+  /* move panel 40px to the right and 100px up */
+  transform: translate(60px, -145px);
+}
+#paint-shapes-panel .shapes-grid {
+  display: flex;              
+  flex-direction: row;
+  gap: 12px;                  
+  justify-content: center;
+  align-items: center;
+}
+
+#paint-shapes-panel .tool-item {
+  padding: 4px;              
+}
+
+
+
+.shape-btn {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.shape-btn:hover {
+  background: #444;
+}
+.shape-btn svg {
+  display: block;
+}
